@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <th:block th:fragment="theme-init">
+    <script>
+      (function() {
+        var t = localStorage.getItem('wispjr-theme')
+          || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+  </th:block>
+</body>
+</html>

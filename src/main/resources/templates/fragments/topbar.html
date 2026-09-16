@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="topbar" class="topbar">
+    <button class="topbar-menu" id="menuBtn" aria-label="Menu">
+        <span class="ph ph-list"></span>
+    </button>
+
+    <span class="topbar-brand">WispJR</span>
+
+    <div class="topbar-spacer"></div>
+
+    <label class="theme-toggle" title="Cambiar tema">
+        <input type="checkbox" id="themeToggle" />
+        <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb">
+                <span class="ph ph-moon icon-moon"></span>
+                <span class="ph ph-sun icon-sun"></span>
+            </span>
+        </span>
+    </label>
+
+    <div class="user-info">
+        <span class="ph ph-user-circle" style="font-size: 20px; color: var(--text-secondary);"></span>
+        <span class="badge-rol" th:text="${rol}"></span>
+    </div>
+</div>
+
+</body>
+</html>

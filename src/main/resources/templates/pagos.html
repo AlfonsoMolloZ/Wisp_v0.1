@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagos</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Lista de pagos</h1>
+
+          <div class="filter-row">
+            <form method="get" action="/pagos" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+              <div>
+                <label style="font-weight:500;">Año</label>
+                <select name="anio" onchange="this.form.submit()">
+                  <option th:each="a : ${anios}" th:value="${a}" th:text="${a}" th:selected="${a == anioSeleccionado}"></option>
+                </select>
+              </div>
+              <div>
+                <label style="font-weight:500;">Mes</label>
+                <select name="mes" onchange="this.form.submit()">
+                  <option value="1" th:selected="${mesSeleccionado == 1}">Enero</option>
+                  <option value="2" th:selected="${mesSeleccionado == 2}">Febrero</option>
+                  <option value="3" th:selected="${mesSeleccionado == 3}">Marzo</option>
+                  <option value="4" th:selected="${mesSeleccionado == 4}">Abril</option>
+                  <option value="5" th:selected="${mesSeleccionado == 5}">Mayo</option>
+                  <option value="6" th:selected="${mesSeleccionado == 6}">Junio</option>
+                  <option value="7" th:selected="${mesSeleccionado == 7}">Julio</option>
+                  <option value="8" th:selected="${mesSeleccionado == 8}">Agosto</option>
+                  <option value="9" th:selected="${mesSeleccionado == 9}">Septiembre</option>
+                  <option value="10" th:selected="${mesSeleccionado == 10}">Octubre</option>
+                  <option value="11" th:selected="${mesSeleccionado == 11}">Noviembre</option>
+                  <option value="12" th:selected="${mesSeleccionado == 12}">Diciembre</option>
+                </select>
+              </div>
+            </form>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="search-bar">
+              <label>Buscar:</label>
+              <input type="text" id="searchInput" placeholder="Cliente, estado..." />
+            </div>
+            <a href="/pagos/generar" class="btn btn-primary">
+              <span class="ph ph-currency-dollar" style="font-size:18px;"></span>
+              Generar pagos del mes
+            </a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Monto</th>
+                <th>F. Emisión</th>
+                <th>F. Vencimiento</th>
+                <th>Estado</th>
+                <th>Método</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr th:each="pago : ${pagos}">
+                <td th:text="${pago.cliente != null ? pago.cliente.nombre : 'Sin cliente'}">Sin cliente</td>
+                <td th:text="${'S/ ' + pago.monto}">S/ 100.00</td>
+                <td th:text="${#temporals.format(pago.fechaEmision,'dd/MM/yyyy')}">01/06/2026</td>
+                <td th:text="${#temporals.format(pago.fechaVencimiento,'dd/MM/yyyy')}">15/06/2026</td>
+                <td>
+                  <span class="badge"
+                    th:classappend="${pago.estado == 'Pagado'} ? 'badge-active' : 'badge-suspend'"
+                    th:text="${pago.estado}">
+                    Pendiente
+                  </span>
+                </td>
+                <td th:text="${pago.metodoPago != null ? pago.metodoPago : '-'}">-</td>
+                <td class="actions">
+                   <a th:onclick="'verDetalle(\'/pagos/ver/' + ${pago.id} + '\')'" class="btn-icon btn-view" title="Ver" style="cursor:pointer;">
+                    <span class="ph ph-eye"></span>
+                  </a>
+                  <a th:href="@{/pagos/editar/{id}(id=${pago.id})}" class="btn-icon btn-edit" title="Editar">
+                    <span class="ph ph-pencil-simple"></span>
+                  </a>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(pagos)}">
+                <td colspan="7">
+                  <div class="empty-state">
+                    <span class="empty-icon ph ph-currency-dollar"></span>
+                    <h3>No hay pagos</h3>
+                    <p>Genera los pagos del mes para comenzar</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    initTableSearch('searchInput', 'tableBody');
+  </script>
+
+</body>
+</html>

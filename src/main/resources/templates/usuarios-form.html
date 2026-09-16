@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Usuario</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1 th:text="${usuario.id != null} ? 'Editar usuario' : 'Nuevo usuario'">Nuevo usuario</h1>
+          <a th:href="@{/usuarios}" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="table-wrap" style="padding: 28px;">
+
+          <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="post">
+            <input type="hidden" th:if="${usuario.id != null}" th:field="*{id}" />
+
+            <div class="form-group">
+              <label>Usuario</label>
+              <input type="text" th:field="*{username}" placeholder="Ingrese el usuario" required />
+            </div>
+
+            <div class="form-group">
+              <label>Contraseña</label>
+              <input type="password" th:field="*{password}" placeholder="Ingrese la contraseña" />
+            </div>
+
+            <div class="form-group" style="max-width: 480px;">
+              <label>Rol</label>
+              <select th:field="*{role}">
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+              </select>
+            </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 12px;">
+              <span class="ph ph-floppy-disk" style="font-size:18px;"></span>
+              Guardar
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>

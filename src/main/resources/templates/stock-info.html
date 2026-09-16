@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Stock</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main">
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+      <div class="page-body">
+        <div class="page-header">
+          <h1>Informacion de Stock</h1>
+          <a href="/stock" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="info-card" style="--info-avatar-from: var(--accent); --info-avatar-to: var(--accent2);">
+          <div class="info-header">
+            <div class="info-avatar">
+              <span th:text="${#strings.substring(stock.equipo,0,1)}">E</span>
+            </div>
+            <div class="info-header-text">
+              <h2 th:text="${stock.equipo}">Equipo</h2>
+              <p th:text="${stock.marca + ' - ' + stock.modelo}">Marca - Modelo</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Informacion del Equipo</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-desktop"></span>
+              <span class="info-label">Equipo</span>
+              <span class="info-value" th:text="${stock.equipo}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-tag"></span>
+              <span class="info-label">Marca</span>
+              <span class="info-value" th:text="${stock.marca}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-tag"></span>
+              <span class="info-label">Modelo</span>
+              <span class="info-value" th:text="${stock.modelo}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-counter"></span>
+              <span class="info-label">Cantidad</span>
+              <span class="info-value" th:text="${stock.cantidad}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Estado</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-check-circle"></span>
+              <span class="info-label">Estado</span>
+              <span class="info-badge"
+                th:classappend="${stock.estado == 'Nuevo'} ? 'badge-new' : 'badge-active'"
+                th:text="${stock.estado}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-calendar"></span>
+              <span class="info-label">Ultimo ingreso</span>
+              <span class="info-value" th:text="${#temporals.format(stock.ultimoIngreso,'dd/MM/yyyy')}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

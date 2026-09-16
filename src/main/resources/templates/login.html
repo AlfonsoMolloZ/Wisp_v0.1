@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wisp — Iniciar sesión</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+<body class="login-page">
+
+  <div class="login-card">
+    <div class="login-logo">
+      <img th:src="@{/img/logo.png}" alt="WispJR" class="login-logo-img" />
+      <h2>Wisp</h2>
+      <p>Sistema de gestión de red</p>
+    </div>
+
+    <p class="login-title">Iniciar sesión</p>
+
+    <div th:if="${param.error}" class="alert-error">
+      Usuario o contraseña incorrectos.
+    </div>
+
+    <div th:if="${param.logout}" class="alert-success">
+      Sesión cerrada correctamente.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required />
+      </div>
+
+      <div class="form-check">
+        <input type="checkbox" id="showPass" onclick="togglePass()" />
+        <label for="showPass">Mostrar contraseña</label>
+      </div>
+
+      <button type="submit" class="btn-login">Iniciar sesión</button>
+    </form>
+
+    <div class="login-footer">
+      <label>
+        <input type="checkbox" style="accent-color: var(--accent);" /> Recuérdame
+      </label>
+      <a href="#">¿Olvidó su contraseña?</a>
+    </div>
+  </div>
+
+  <script>
+    function togglePass() {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>

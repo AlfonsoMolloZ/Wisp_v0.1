@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Pago</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main">
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+      <div class="page-body">
+        <div class="page-header">
+          <h1>Informacion del Pago</h1>
+          <a href="/pagos" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="info-card" style="--info-avatar-from: var(--accent2); --info-avatar-to: #06b6d4;">
+          <div class="info-header">
+            <div class="info-avatar">
+              <span class="ph ph-currency-dollar"></span>
+            </div>
+            <div class="info-header-text">
+              <h2 th:text="${pago.cliente != null ? pago.cliente.nombre : 'Sin cliente'}">Cliente</h2>
+              <p>Detalle del pago</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Informacion del Pago</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-user"></span>
+              <span class="info-label">Cliente</span>
+              <span class="info-value" th:text="${pago.cliente != null ? pago.cliente.nombre : 'Sin cliente'}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-currency-dollar"></span>
+              <span class="info-label">Monto</span>
+              <span class="info-value" th:text="${'S/ ' + pago.monto}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-credit-card"></span>
+              <span class="info-label">Metodo de pago</span>
+              <span class="info-value" th:text="${pago.metodoPago != null ? pago.metodoPago : '-'}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-chat-circle"></span>
+              <span class="info-label">Observacion</span>
+              <span class="info-value" th:text="${pago.observacion != null ? pago.observacion : '-'}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Fechas</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-calendar-plus"></span>
+              <span class="info-label">Fecha de emision</span>
+              <span class="info-value" th:text="${#temporals.format(pago.fechaEmision,'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-calendar-x"></span>
+              <span class="info-label">Fecha de vencimiento</span>
+              <span class="info-value" th:text="${#temporals.format(pago.fechaVencimiento,'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-calendar-check"></span>
+              <span class="info-label">Fecha de pago</span>
+              <span class="info-value" th:text="${pago.fechaPago != null ? #temporals.format(pago.fechaPago,'dd/MM/yyyy') : '-'}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-clock"></span>
+              <span class="info-label">Periodo</span>
+              <span class="info-value" th:text="${pago.mes + '/' + pago.anio}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Estado</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-check-circle"></span>
+              <span class="info-label">Estado</span>
+              <span class="info-badge"
+                th:classappend="${pago.estado == 'Pagado'} ? 'badge-active' : 'badge-suspend'"
+                th:text="${pago.estado}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

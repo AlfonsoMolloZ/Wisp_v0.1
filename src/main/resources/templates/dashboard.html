@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Dashboard</h1>
+        </div>
+
+        <div class="filter-row">
+          <label>Mes:</label>
+          <select id="mesSelect" onchange="filtrarMes(this.value)">
+            <option value="Enero">Enero</option>
+            <option value="Febrero">Febrero</option>
+            <option value="Marzo">Marzo</option>
+            <option value="Abril">Abril</option>
+            <option value="Mayo">Mayo</option>
+            <option value="Junio">Junio</option>
+            <option value="Julio" selected>Julio</option>
+            <option value="Agosto">Agosto</option>
+            <option value="Septiembre">Septiembre</option>
+            <option value="Octubre">Octubre</option>
+            <option value="Noviembre">Noviembre</option>
+            <option value="Diciembre">Diciembre</option>
+          </select>
+        </div>
+
+        <!-- Cards -->
+        <div class="dash-row">
+
+          <!-- CLIENTES -->
+          <div class="dash-card">
+            <div class="card-label">Clientes</div>
+            <div class="card-total">
+              Total: <strong th:text="${totalClientes}">0</strong>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card mc-green">
+                <span class="mc-icon ph ph-wifi-high"></span>
+                <div>
+                  <div class="mc-val" th:text="${clientesActivos}">0</div>
+                  <div class="mc-lbl">Activos</div>
+                </div>
+              </div>
+              <div class="mini-card mc-blue">
+                <span class="mc-icon ph ph-user-plus"></span>
+                <div>
+                  <div class="mc-val" th:text="${clientesNuevos}">0</div>
+                  <div class="mc-lbl">Nuevos</div>
+                </div>
+              </div>
+              <div class="mini-card mc-yellow">
+                <span class="mc-icon ph ph-clock"></span>
+                <div>
+                  <div class="mc-val" th:text="${clientesPendientes}">0</div>
+                  <div class="mc-lbl">Pendientes</div>
+                </div>
+              </div>
+              <div class="mini-card mc-red">
+                <span class="mc-icon ph ph-prohibit"></span>
+                <div>
+                  <div class="mc-val" th:text="${clientesSuspendidos}">0</div>
+                  <div class="mc-lbl">Suspendidos</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGOS -->
+          <div class="dash-card">
+            <div class="card-label">Pagos</div>
+            <div class="card-total">
+              Total: <strong th:text="${'S/. ' + #numbers.formatDecimal(totalPagos, 1, 2)}">0</strong>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card mc-green">
+                <span class="mc-icon ph ph-currency-dollar"></span>
+                <div>
+                  <div class="mc-val" th:text="${pagosRecibidos}">0</div>
+                  <div class="mc-lbl">Pagados</div>
+                </div>
+              </div>
+              <div class="mini-card mc-yellow">
+                <span class="mc-icon ph ph-hourglass"></span>
+                <div>
+                  <div class="mc-val" th:text="${pagosPendientes}">0</div>
+                  <div class="mc-lbl">Pendientes</div>
+                </div>
+              </div>
+              <div class="mini-card mc-red">
+                <span class="mc-icon ph ph-warning"></span>
+                <div>
+                  <div class="mc-val" th:text="${pagosVencidos}">0</div>
+                  <div class="mc-lbl">Vencidos</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INSTALACIONES -->
+          <div class="dash-card">
+            <div class="card-label">Instalaciones</div>
+            <div class="card-total">
+              Total: <strong th:text="${totalInstalaciones}">0</strong>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card mc-yellow">
+                <span class="mc-icon ph ph-hard-hat"></span>
+                <div>
+                  <div class="mc-val" th:text="${instalacionesPendientes}">0</div>
+                  <div class="mc-lbl">Pendientes</div>
+                </div>
+              </div>
+              <div class="mini-card mc-green">
+                <span class="mc-icon ph ph-check-circle"></span>
+                <div>
+                  <div class="mc-val" th:text="${instalacionesAtendidas}">0</div>
+                  <div class="mc-lbl">Atendidas</div>
+                </div>
+              </div>
+              <div class="mini-card mc-red">
+                <span class="mc-icon ph ph-x-circle"></span>
+                <div>
+                  <div class="mc-val" th:text="${instalacionesAnuladas}">0</div>
+                  <div class="mc-lbl">Anuladas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AVERIAS -->
+          <div class="dash-card">
+            <div class="card-label">Averías</div>
+            <div class="card-total">
+              Total: <strong th:text="${totalAverias}">0</strong>
+            </div>
+            <div class="mini-cards">
+              <div class="mini-card mc-yellow">
+                <span class="mc-icon ph ph-wrench"></span>
+                <div>
+                  <div class="mc-val" th:text="${averiasPendientes}">0</div>
+                  <div class="mc-lbl">Pendientes</div>
+                </div>
+              </div>
+              <div class="mini-card mc-green">
+                <span class="mc-icon ph ph-check-fat"></span>
+                <div>
+                  <div class="mc-val" th:text="${averiasAtendidas}">0</div>
+                  <div class="mc-lbl">Atendidas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    function filtrarMes(mes) { window.location.href = '/dashboard?mes=' + mes; }
+    const params = new URLSearchParams(window.location.search);
+    const mes = params.get('mes');
+    if (mes) document.getElementById('mesSelect').value = mes;
+  </script>
+
+</body>
+</html>

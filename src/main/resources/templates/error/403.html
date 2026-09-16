@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Denegado — WispJR</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></div>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+    .error-card {
+      text-align: center;
+      padding: 48px 40px;
+      max-width: 420px;
+      animation: fadeInUp 0.6s var(--ease-smooth);
+    }
+    .error-icon {
+      font-size: 80px;
+      color: var(--danger);
+      margin-bottom: 24px;
+      display: block;
+      opacity: 0.9;
+    }
+    .error-card h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .error-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+    .error-card .btn {
+      margin-top: 24px;
+    }
+  </style>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+<body>
+
+  <div class="error-card">
+    <span class="error-icon ph ph-shield-warning"></span>
+    <h1>Acceso Denegado</h1>
+    <p>No tienes permisos para acceder a esta página.</p>
+    <p>Tu rol no está autorizado para esta operación.</p>
+    <a th:href="@{/instalaciones}" class="btn btn-primary">
+      <span class="ph ph-house" style="font-size:18px;"></span>
+      Volver al Inicio
+    </a>
+  </div>
+
+</body>
+</html>

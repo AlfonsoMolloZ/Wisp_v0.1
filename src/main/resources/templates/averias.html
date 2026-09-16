@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Averías</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Lista de averías</h1>
+
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="search-bar">
+              <label>Buscar:</label>
+              <input type="text" id="searchInput" placeholder="Cliente, código..." />
+            </div>
+            <a sec:authorize="hasRole('ADMIN')" href="/averias/nueva" class="btn btn-primary">
+              <span class="ph ph-plus" style="font-size:18px;"></span>
+              Nueva avería
+            </a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Código</th>
+                <th>Dirección</th>
+                <th>Estado</th>
+                <th>Fecha registro</th>
+                <th>Fecha atención</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr th:each="averia : ${averias}">
+                <td th:text="${averia.clienteNombre}">Nombre</td>
+                <td th:text="${averia.codigo}">A12123</td>
+                <td th:text="${averia.direccion}">Dirección</td>
+                <td>
+                  <span class="badge"
+                    th:classappend="${averia.estado == 'Atendido'} ? 'badge-attended' : 'badge-unattend'"
+                    th:text="${averia.estado}">
+                    Estado
+                  </span>
+                </td>
+                <td th:text="${#temporals.format(averia.fechaRegistro,'dd/MM/yyyy')}"></td>
+                <td th:text="${averia.fechaAtencion != null ? #temporals.format(averia.fechaAtencion,'dd/MM/yyyy') : '-'}"></td>
+                <td class="actions">
+                   <a th:onclick="'verDetalle(\'/averias/ver/' + ${averia.id} + '\')'" class="btn-icon btn-view" title="Ver" style="cursor:pointer;">
+                    <span class="ph ph-eye"></span>
+                  </a>
+                  <a th:href="@{/averias/editar/{id}(id=${averia.id})}" class="btn-icon btn-edit" title="Editar">
+                    <span class="ph ph-pencil-simple"></span>
+                  </a>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(averias)}">
+                <td colspan="7">
+                  <div class="empty-state">
+                    <span class="empty-icon ph ph-bug"></span>
+                    <h3>No hay averías</h3>
+                    <p>No se han registrado averías aún</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    initTableSearch('searchInput', 'tableBody');
+  </script>
+
+</body>
+</html>

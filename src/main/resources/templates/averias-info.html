@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Averia</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main">
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+      <div class="page-body">
+        <div class="page-header">
+          <h1>Informacion de la Averia</h1>
+          <a href="/averias" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="info-card" style="--info-avatar-from: var(--danger); --info-avatar-to: var(--warn);">
+          <div class="info-header">
+            <div class="info-avatar">
+              <span th:text="${#strings.substring(averia.codigo,0,1)}">A</span>
+            </div>
+            <div class="info-header-text">
+              <h2 th:text="${averia.codigo}">Codigo</h2>
+              <p th:text="${averia.cliente != null ? averia.cliente.nombres + ' ' + averia.cliente.apellidos : 'Sin cliente'}">Cliente</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Detalle</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-hash"></span>
+              <span class="info-label">Codigo</span>
+              <span class="info-value" th:text="${averia.codigo}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-user"></span>
+              <span class="info-label">Cliente</span>
+              <span class="info-value" th:text="${averia.cliente != null ? averia.cliente.nombres + ' ' + averia.cliente.apellidos : 'Sin cliente'}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-map-pin"></span>
+              <span class="info-label">Direccion</span>
+              <span class="info-value" th:text="${averia.direccion}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-note"></span>
+              <span class="info-label">Descripcion</span>
+              <span class="info-value" th:text="${averia.descripcion}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Fechas</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-calendar-plus"></span>
+              <span class="info-label">Fecha de registro</span>
+              <span class="info-value" th:text="${#temporals.format(averia.fechaRegistro,'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="info-row" th:if="${averia.fechaAtencion != null}">
+              <span class="info-row-icon ph ph-calendar-check"></span>
+              <span class="info-label">Fecha de atencion</span>
+              <span class="info-value" th:text="${#temporals.format(averia.fechaAtencion,'dd/MM/yyyy')}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Estado</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-check-circle"></span>
+              <span class="info-label">Estado</span>
+              <span class="info-badge"
+                th:classappend="${averia.estado == 'Atendido'} ? 'badge-attended' : 'badge-unattend'"
+                th:text="${averia.estado}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

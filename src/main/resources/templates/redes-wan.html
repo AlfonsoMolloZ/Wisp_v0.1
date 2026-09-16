@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redes WAN</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Redes WAN</h1>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="search-bar">
+              <label>Buscar:</label>
+              <input type="text" id="searchInput" placeholder="Nombre o red..." />
+            </div>
+            <a href="/redes-wan/nueva" class="btn btn-primary">
+              <span class="ph ph-plus" style="font-size:18px;"></span>
+              Nueva red
+            </a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Dirección de red</th>
+                <th>Máscara</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr th:each="red : ${redes}">
+                <td th:text="${red.nombre}">Red Principal</td>
+                <td th:text="${red.direccionRed}">192.168.1.0</td>
+                <td th:text="${red.mascara}">255.255.255.0</td>
+                <td class="actions">
+                   <a th:onclick="'verDetalle(\'/redes-wan/ver/' + ${red.id} + '\')'" class="btn-icon btn-view" title="Ver" style="cursor:pointer;">
+                    <span class="ph ph-eye"></span>
+                  </a>
+                  <a th:href="@{/redes-wan/editar/{id}(id=${red.id})}" class="btn-icon btn-edit" title="Editar">
+                    <span class="ph ph-pencil-simple"></span>
+                  </a>
+                  <form th:action="@{/redes-wan/eliminar/{id}(id=${red.id})}" method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="btn-icon btn-del" title="Eliminar"
+                      onclick="return confirm('¿Desea eliminar esta red?')">
+                      <span class="ph ph-trash"></span>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(redes)}">
+                <td colspan="4">
+                  <div class="empty-state">
+                    <span class="empty-icon ph ph-network"></span>
+                    <h3>No hay redes</h3>
+                    <p>Registra tu primera red WAN</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    initTableSearch('searchInput', 'tableBody');
+  </script>
+
+</body>
+</html>

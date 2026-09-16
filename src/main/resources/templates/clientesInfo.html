@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Cliente</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main">
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+      <div class="page-body">
+        <div class="page-header">
+          <h1>Información del Cliente</h1>
+          <a href="/clientes" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="info-card" style="--info-avatar-from: var(--accent); --info-avatar-to: var(--accent2);">
+          <div class="info-header">
+            <div class="info-avatar">
+              <span th:text="${#strings.substring(cliente.nombres,0,1)}">C</span>
+            </div>
+            <div class="info-header-text">
+              <h2 th:text="${cliente.nombres + ' ' + cliente.apellidos}">Nombre Completo</h2>
+              <p th:text="${cliente.correo}">correo@ejemplo.com</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Datos Personales</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-identification-card"></span>
+              <span class="info-label">DNI</span>
+              <span class="info-value" th:text="${cliente.dni}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-phone"></span>
+              <span class="info-label">Telefono</span>
+              <span class="info-value" th:text="${cliente.telefono}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-map-pin"></span>
+              <span class="info-label">Direccion</span>
+              <span class="info-value" th:text="${cliente.direccion}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Datos de Red</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-globe"></span>
+              <span class="info-label">IP</span>
+              <span class="info-value" th:text="${cliente.ip}"></span>
+            </div>
+            <div class="info-row" th:if="${cliente.redWan != null}">
+              <span class="info-row-icon ph ph-network"></span>
+              <span class="info-label">Red WAN</span>
+              <span class="info-value" th:text="${cliente.redWan.nombre}"></span>
+            </div>
+            <div class="info-row" th:if="${cliente.plan != null}">
+              <span class="info-row-icon ph ph-package"></span>
+              <span class="info-label">Plan</span>
+              <span class="info-value" th:text="${cliente.plan.nombre}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Estado</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-check-circle"></span>
+              <span class="info-label">Estado</span>
+              <span class="info-badge"
+                th:classappend="${cliente.estado == 'Activo'} ? 'badge-active' : 'badge-suspend'"
+                th:text="${cliente.estado}"></span>
+            </div>
+            <div class="info-row" th:if="${cliente.fechaSuspension != null}">
+              <span class="info-row-icon ph ph-calendar-x"></span>
+              <span class="info-label">Suspendido el</span>
+              <span class="info-value" th:text="${#temporals.format(cliente.fechaSuspension,'dd/MM/yyyy')}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Pago</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1 th:text="${pago.id == null} ? 'Nuevo pago' : 'Editar pago'">Editar pago</h1>
+          <a href="/pagos" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="table-wrap" style="padding: 28px;">
+
+          <form th:action="@{/pagos/guardar}" th:object="${pago}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+              <label>Cliente</label>
+              <input type="text" th:value="${pago.cliente.nombre}" readonly />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+              <div class="form-group">
+                <label>Monto</label>
+                <input type="number" step="0.01" th:field="*{monto}" required />
+              </div>
+
+              <div class="form-group">
+                <label>Estado</label>
+                <select th:field="*{estado}">
+                  <th:block th:if="${pago.estado != 'Pagado'}">
+                    <option th:value="${pago.estado}" th:text="${pago.estado}"></option>
+                    <option value="Pagado">Pagado</option>
+                  </th:block>
+                  <th:block th:if="${pago.estado == 'Pagado'}">
+                    <option value="Pagado">Pagado</option>
+                    <option value="Anulado">Anulado</option>
+                  </th:block>
+                </select>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+              <div class="form-group">
+                <label>Fecha de emisión</label>
+                <input type="date" name="fechaEmision" th:value="${#temporals.format(pago.fechaEmision,'yyyy-MM-dd')}" readonly />
+              </div>
+
+              <div class="form-group">
+                <label>Fecha de vencimiento</label>
+                <input type="date" name="fechaVencimiento" th:value="${#temporals.format(pago.fechaVencimiento,'yyyy-MM-dd')}" readonly />
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+              <div class="form-group">
+                <label>Fecha de pago</label>
+                <input type="date" name="fechaPago" th:value="${pago.fechaPago != null ? #temporals.format(pago.fechaPago,'yyyy-MM-dd') : ''}" th:readonly="${pago.fechaPago != null}" />
+              </div>
+
+              <div class="form-group">
+                <label>Método de pago</label>
+                <select th:field="*{metodoPago}">
+                  <option value="">Seleccione</option>
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Yape">Yape</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Observación</label>
+              <textarea th:field="*{observacion}" rows="4" placeholder="Observaciones del pago..." style="width: 100%; max-width: 480px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; color: var(--text); font-size: 14px; outline: none; resize: vertical;"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 8px;">
+              <span class="ph ph-floppy-disk" style="font-size:18px;"></span>
+              Guardar
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>

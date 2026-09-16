@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Instalación</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1 th:text="${instalacion.id == null} ? 'Nueva instalación' : 'Editar instalación'">Nueva instalación</h1>
+          <a href="/instalaciones" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="table-wrap" style="padding: 28px;">
+
+          <form th:action="@{/instalaciones/guardar}" th:object="${instalacion}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group">
+              <label>Cliente</label>
+              <div th:if="${instalacion.id == null}">
+                <select id="clienteSelect" th:field="*{clienteId}" required>
+                  <option value="">-- Seleccionar cliente --</option>
+                  <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}" th:data-direccion="${c.direccion}"></option>
+                </select>
+              </div>
+              <div th:if="${instalacion.id != null}">
+                <input type="text" th:field="*{nombreCliente}" readonly />
+                <input type="hidden" th:field="*{clienteId}" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Dirección</label>
+              <input type="text" id="direccion" th:field="*{direccion}" readonly />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+              <div class="form-group">
+                <label>Tipo</label>
+                <div th:if="${instalacion.id == null}">
+                  <select th:field="*{tipo}">
+                    <option value="Estándar">Estándar</option>
+                    <option value="Premium">Premium</option>
+                  </select>
+                </div>
+                <div th:if="${instalacion.id != null}">
+                  <input type="text" th:value="*{tipo}" readonly />
+                  <input type="hidden" th:field="*{tipo}" />
+                </div>
+              </div>
+
+              <div class="form-group" th:if="${instalacion.id != null}">
+                <label>Estado</label>
+                <select th:field="*{estado}">
+                  <option value="Pendiente">Pendiente</option>
+                  <option value="Atendido">Atendido</option>
+                  <option value="Anulado">Anulado</option>
+                </select>
+              </div>
+            </div>
+
+            <input type="hidden" th:if="${instalacion.id == null}" th:field="*{estado}" value="Pendiente" />
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+              <div class="form-group">
+                <label>¿Cobrar instalación?</label>
+                <select th:field="*{cobrarInstalacion}" id="cobrarInstalacion">
+                  <option th:value="false">No</option>
+                  <option th:value="true">Sí</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Monto</label>
+                <input id="montoInstalacion" type="number" step="0.01" th:field="*{montoInstalacion}" />
+              </div>
+            </div>
+
+            <div class="form-group" style="max-width: 480px;">
+              <label>Método de pago</label>
+              <select id="metodoPago" th:field="*{metodoPago}">
+                <option value="">Seleccione</option>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Yape">Yape</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Observaciones</label>
+              <textarea th:field="*{observacion}" rows="4" style="width: 100%; max-width: 480px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; color: var(--text); font-size: 14px; outline: none; resize: vertical;"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top: 8px;">
+              <span class="ph ph-floppy-disk" style="font-size:18px;"></span>
+              Guardar
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var clienteSelect = document.getElementById("clienteSelect");
+      var direccionInput = document.getElementById("direccion");
+
+      if (clienteSelect) {
+        function actualizarDireccion() {
+          var opcion = clienteSelect.options[clienteSelect.selectedIndex];
+          direccionInput.value = opcion.getAttribute("data-direccion") || "";
+        }
+        clienteSelect.addEventListener("change", actualizarDireccion);
+        actualizarDireccion();
+      }
+
+      var cobrar = document.getElementById("cobrarInstalacion");
+      if (cobrar) {
+        var metodo = document.getElementById("metodoPago");
+        var monto = document.getElementById("montoInstalacion");
+        function actualizar() {
+          if (cobrar.value === "true") {
+            metodo.style.display = "";
+            monto.style.display = "";
+          } else {
+            metodo.style.display = "none";
+            monto.style.display = "none";
+          }
+        }
+        cobrar.addEventListener("change", actualizar);
+        actualizar();
+      }
+    });
+  </script>
+
+</body>
+</html>

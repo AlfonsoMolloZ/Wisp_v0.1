@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instalaciones</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Lista de instalaciones</h1>
+
+          <div class="filter-row">
+            <a th:href="@{/instalaciones}" class="btn"
+              th:classappend="${estadoSeleccionado == null} ? ' btn-primary' : ' btn-outline'">
+              Todos
+            </a>
+            <a th:href="@{/instalaciones(estado='Pendiente')}" class="btn"
+              th:classappend="${estadoSeleccionado == 'Pendiente'} ? ' btn-primary' : ' btn-outline'">
+              Pendientes
+            </a>
+            <a th:href="@{/instalaciones(estado='Atendido')}" class="btn"
+              th:classappend="${estadoSeleccionado == 'Atendido'} ? ' btn-primary' : ' btn-outline'">
+              Atendidos
+            </a>
+            <a th:href="@{/instalaciones(estado='Anulado')}" class="btn"
+              th:classappend="${estadoSeleccionado == 'Anulado'} ? ' btn-primary' : ' btn-outline'">
+              Anulados
+            </a>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="search-bar">
+              <label>Buscar:</label>
+              <input type="text" id="searchInput" placeholder="Pre-cliente, dirección..." />
+            </div>
+            <a sec:authorize="hasRole('ADMIN')" href="/instalaciones/nueva" class="btn btn-primary">
+              <span class="ph ph-plus" style="font-size:18px;"></span>
+              Nueva instalación
+            </a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Dirección</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Fecha registro</th>
+                <th>Fecha atención</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr th:each="inst : ${instalaciones}" th:attr="data-estado=${inst.estado}">
+                <td th:text="${inst.preClienteNombre}">Nombre</td>
+                <td th:text="${inst.direccion}">Dirección</td>
+                <td th:text="${inst.tipo}">Tipo</td>
+                <td>
+                  <span class="badge"
+                    th:classappend="${inst.estado == 'Atendido'} ? 'badge-attended' : (${inst.estado == 'Anulado'} ? 'badge-unattend' : 'badge-pending')"
+                    th:text="${inst.estado}">
+                    Estado
+                  </span>
+                </td>
+                <td th:text="${inst.fechaRegistro != null ? #temporals.format(inst.fechaRegistro,'dd/MM/yyyy HH:mm') : '-'}">
+                </td>
+                <td th:text="${inst.fechaAtencion != null ? #temporals.format(inst.fechaAtencion,'dd/MM/yyyy HH:mm') : '-'}">
+                </td>
+                <td class="actions">
+                   <a th:onclick="'verDetalle(\'/instalaciones/ver/' + ${inst.id} + '\')'" class="btn-icon btn-view" title="Ver" style="cursor:pointer;">
+                    <span class="ph ph-eye"></span>
+                  </a>
+                  <a th:href="@{/instalaciones/editar/{id}(id=${inst.id})}" class="btn-icon btn-edit" title="Editar"
+                    th:classappend="${inst.estado != 'Pendiente'} ? 'disabled'"
+                    th:attr="onclick=${inst.estado != 'Pendiente'} ? 'return false;' : null">
+                    <span class="ph ph-pencil-simple"></span>
+                  </a>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(instalaciones)}">
+                <td colspan="7">
+                  <div class="empty-state">
+                    <span class="empty-icon ph ph-hard-hat"></span>
+                    <h3>No hay instalaciones</h3>
+                    <p>Registra una nueva instalación para comenzar</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    initTableSearch('searchInput', 'tableBody');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Red WAN</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main">
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+      <div class="page-body">
+        <div class="page-header">
+          <h1>Informacion de la Red WAN</h1>
+          <a href="/redes-wan" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="info-card" style="--info-avatar-from: #8b5cf6; --info-avatar-to: var(--accent);">
+          <div class="info-header">
+            <div class="info-avatar">
+              <span class="ph ph-network"></span>
+            </div>
+            <div class="info-header-text">
+              <h2 th:text="${red.nombre}">Red Principal</h2>
+              <p>Configuracion de la red WAN</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Informacion de Red</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-text"></span>
+              <span class="info-label">Nombre</span>
+              <span class="info-value" th:text="${red.nombre}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-globe"></span>
+              <span class="info-label">Direccion de red</span>
+              <span class="info-value" th:text="${red.direccionRed}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-mask"></span>
+              <span class="info-label">Mascara</span>
+              <span class="info-value" th:text="${red.mascara}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-router"></span>
+              <span class="info-label">Gateway de red</span>
+              <span class="info-value" th:text="${red.gateway}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-router"></span>
+              <span class="info-label">DNS de red</span>
+              <span class="info-value" th:text="${red.dns}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Estado</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-check-circle"></span>
+              <span class="info-label">Estado de red</span>
+              <span class="info-badge"
+                th:classappend="${red.estado == 'Activa'} ? 'badge-active' : 'badge-suspend'"
+                th:text="${red.estado}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

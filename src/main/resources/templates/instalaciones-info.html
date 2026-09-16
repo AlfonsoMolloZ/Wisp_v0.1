@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WispJR — Instalacion</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="main">
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+      <div class="page-body">
+        <div class="page-header">
+          <h1>Informacion de la Instalacion</h1>
+          <a href="/instalaciones" class="btn btn-outline">
+            <span class="ph ph-arrow-left" style="font-size:18px;"></span>
+            Volver
+          </a>
+        </div>
+
+        <div class="info-card" style="--info-avatar-from: var(--accent); --info-avatar-to: #8b5cf6;">
+          <div class="info-header">
+            <div class="info-avatar">
+              <span class="ph ph-wrench"></span>
+            </div>
+            <div class="info-header-text">
+              <h2 th:text="${instalacion.preCliente.nombre}">Cliente</h2>
+              <p>Detalle de instalacion</p>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Informacion General</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-user"></span>
+              <span class="info-label">Cliente</span>
+              <span class="info-value" th:text="${instalacion.preCliente.nombre}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-map-pin"></span>
+              <span class="info-label">Direccion</span>
+              <span class="info-value" th:text="${instalacion.direccion}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-wrench"></span>
+              <span class="info-label">Tipo</span>
+              <span class="info-value" th:text="${instalacion.tipo}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Fechas</div>
+            <div class="info-row" th:if="${instalacion.fechaRegistro != null}">
+              <span class="info-row-icon ph ph-calendar-plus"></span>
+              <span class="info-label">Fecha de registro</span>
+              <span class="info-value" th:text="${#temporals.format(instalacion.fechaRegistro,'dd/MM/yyyy')}"></span>
+            </div>
+            <div class="info-row" th:if="${instalacion.fechaAtencion != null}">
+              <span class="info-row-icon ph ph-calendar-check"></span>
+              <span class="info-label">Fecha de atencion</span>
+              <span class="info-value" th:text="${#temporals.format(instalacion.fechaAtencion,'dd/MM/yyyy')}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Cobro</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-currency-dollar"></span>
+              <span class="info-label">Cobro instalacion</span>
+              <span class="info-value" th:text="${instalacion.cobrarInstalacion} ? 'Si' : 'No'"></span>
+            </div>
+            <div class="info-row" th:if="${instalacion.cobrarInstalacion}">
+              <span class="info-row-icon ph ph-money"></span>
+              <span class="info-label">Monto</span>
+              <span class="info-value" th:text="${'S/ ' + instalacion.montoInstalacion}"></span>
+            </div>
+            <div class="info-row" th:if="${instalacion.cobrarInstalacion}">
+              <span class="info-row-icon ph ph-credit-card"></span>
+              <span class="info-label">Metodo de pago</span>
+              <span class="info-value" th:text="${instalacion.metodoPago}"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-chat-circle"></span>
+              <span class="info-label">Observacion</span>
+              <span class="info-value" th:text="${instalacion.observacion}"></span>
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-section-title">Estado</div>
+            <div class="info-row">
+              <span class="info-row-icon ph ph-check-circle"></span>
+              <span class="info-label">Estado</span>
+              <span class="info-badge"
+                th:classappend="${instalacion.estado == 'Atendido'} ? 'badge-attended' : 'badge-pending'"
+                th:text="${instalacion.estado}"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

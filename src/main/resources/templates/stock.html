@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Lista de equipos</h1>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="search-bar">
+              <label>Buscar:</label>
+              <input type="text" id="searchInput" placeholder="Equipo, marca..." />
+            </div>
+            <a href="/stock/nuevo" class="btn btn-primary">
+              <span class="ph ph-plus" style="font-size:18px;"></span>
+              Nuevo equipo
+            </a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Equipo</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th>Último ingreso</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr th:each="item : ${stocks}">
+                <td th:text="${item.equipo}">Router</td>
+                <td th:text="${item.marca}">TP-Link</td>
+                <td th:text="${item.modelo}">TL-MR6400</td>
+                <td th:text="${item.cantidad}">3</td>
+                <td>
+                  <span class="badge"
+                    th:classappend="${item.estado == 'Nuevo'} ? 'badge-new' : 'badge-active'"
+                    th:text="${item.estado}">Nuevo</span>
+                </td>
+                <td th:text="${#temporals.format(item.ultimoIngreso,'dd/MM/yyyy')}">01/06/2026</td>
+                <td class="actions">
+                   <a th:onclick="'verDetalle(\'/stock/ver/' + ${item.id} + '\')'" class="btn-icon btn-view" title="Ver" style="cursor:pointer;">
+                    <span class="ph ph-eye"></span>
+                  </a>
+                  <a th:href="@{/stock/editar/{id}(id=${item.id})}" class="btn-icon btn-edit" title="Editar">
+                    <span class="ph ph-pencil-simple"></span>
+                  </a>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(stocks)}">
+                <td colspan="7">
+                  <div class="empty-state">
+                    <span class="empty-icon ph ph-package"></span>
+                    <h3>No hay equipos</h3>
+                    <p>Agrega tu primer equipo al inventario</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    initTableSearch('searchInput', 'tableBody');
+  </script>
+
+</body>
+</html>
