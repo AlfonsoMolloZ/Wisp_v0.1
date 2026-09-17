@@ -1637,3 +1637,113 @@ body.login-page::after {
   .mini-card .mc-val { font-size: 20px; }
   .search-bar input { width: 140px; }
 }
+
+/* =====================================================
+   AYUDA CONTEXTUAL — icono "?" y nube de explicación
+   ===================================================== */
+.help-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  cursor: pointer;
+  vertical-align: middle;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1;
+  color: var(--muted);
+  background: transparent;
+  transition: color var(--duration-fast) var(--ease-smooth),
+              background var(--duration-fast) var(--ease-smooth),
+              border-color var(--duration-fast) var(--ease-smooth);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.help-icon::before {
+  content: "?";
+  transform: translateY(0.5px);
+}
+
+.help-icon:hover,
+.help-icon:focus-visible,
+.help-icon.active {
+  color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  border-color: var(--accent);
+  outline: none;
+}
+
+.help-icon:focus-visible {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* Nube / popover */
+.help-popover {
+  position: fixed;
+  z-index: 2000;
+  max-width: 260px;
+  padding: 10px 13px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.08);
+  font-size: 12.5px;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+  transition: opacity var(--duration-fast) var(--ease-smooth),
+              transform var(--duration-fast) var(--ease-smooth);
+  pointer-events: none;
+}
+
+.help-popover.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.help-pop-title {
+  display: block;
+  font-family: 'Rajdhani', 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  color: var(--accent);
+  margin-bottom: 3px;
+}
+
+.help-pop-text {
+  display: block;
+  color: var(--text-secondary);
+}
+
+.help-popover::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  transform: rotate(45deg);
+  left: var(--arrow-x, 50%);
+  margin-left: -5px;
+}
+
+.help-popover[data-pos="bottom"]::after { top: -6px; }
+.help-popover[data-pos="top"]::after {
+  bottom: -6px;
+  transform: rotate(225deg);
+}
+
+@media (max-width: 767px) {
+  .help-popover { max-width: min(78vw, 260px); }
+}

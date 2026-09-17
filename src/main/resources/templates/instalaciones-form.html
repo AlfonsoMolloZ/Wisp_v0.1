@@ -39,7 +39,7 @@
             <input type="hidden" th:field="*{id}" />
 
             <div class="form-group">
-              <label>Cliente</label>
+              <label>Cliente <button type="button" class="help-icon" data-help="instalacion.cliente" aria-label="Ayuda"></button></label>
               <div th:if="${instalacion.id == null}">
                 <select id="clienteSelect" th:field="*{clienteId}" required>
                   <option value="">-- Seleccionar cliente --</option>
@@ -59,7 +59,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
               <div class="form-group">
-                <label>Tipo</label>
+              <label>Tipo <button type="button" class="help-icon" data-help="instalacion.tipo" aria-label="Ayuda"></button></label>
                 <div th:if="${instalacion.id == null}">
                   <select th:field="*{tipo}">
                     <option value="Estándar">Estándar</option>
@@ -73,7 +73,7 @@
               </div>
 
               <div class="form-group" th:if="${instalacion.id != null}">
-                <label>Estado</label>
+                <label>Estado <button type="button" class="help-icon" data-help="instalacion.estado" aria-label="Ayuda"></button></label>
                 <select th:field="*{estado}">
                   <option value="Pendiente">Pendiente</option>
                   <option value="Atendido">Atendido</option>
@@ -86,7 +86,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
               <div class="form-group">
-                <label>¿Cobrar instalación?</label>
+                <label>¿Cobrar instalación? <button type="button" class="help-icon" data-help="instalacion.cobrar" aria-label="Ayuda"></button></label>
                 <select th:field="*{cobrarInstalacion}" id="cobrarInstalacion">
                   <option th:value="false">No</option>
                   <option th:value="true">Sí</option>
@@ -117,6 +117,7 @@
               <span class="ph ph-floppy-disk" style="font-size:18px;"></span>
               Guardar
             </button>
+            <button type="button" class="help-icon" data-help="instalacion.guardar" aria-label="Ayuda"></button>
           </form>
 
         </div>

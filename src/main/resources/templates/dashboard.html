@@ -29,7 +29,7 @@
         </div>
 
         <div class="filter-row">
-          <label>Mes:</label>
+          <label>Mes: <button type="button" class="help-icon" data-help="dashboard.mes" aria-label="Ayuda"></button></label>
           <select id="mesSelect" onchange="filtrarMes(this.value)">
             <option value="Enero">Enero</option>
             <option value="Febrero">Febrero</option>
@@ -51,7 +51,7 @@
 
           <!-- CLIENTES -->
           <div class="dash-card">
-            <div class="card-label">Clientes</div>
+            <div class="card-label">Clientes <button type="button" class="help-icon" data-help="dashboard.clientes" aria-label="Ayuda"></button></div>
             <div class="card-total">
               Total: <strong th:text="${totalClientes}">0</strong>
             </div>
@@ -89,7 +89,7 @@
 
           <!-- PAGOS -->
           <div class="dash-card">
-            <div class="card-label">Pagos</div>
+            <div class="card-label">Pagos <button type="button" class="help-icon" data-help="dashboard.pagos" aria-label="Ayuda"></button></div>
             <div class="card-total">
               Total: <strong th:text="${'S/. ' + #numbers.formatDecimal(totalPagos, 1, 2)}">0</strong>
             </div>
@@ -120,7 +120,7 @@
 
           <!-- INSTALACIONES -->
           <div class="dash-card">
-            <div class="card-label">Instalaciones</div>
+            <div class="card-label">Instalaciones <button type="button" class="help-icon" data-help="dashboard.instalaciones" aria-label="Ayuda"></button></div>
             <div class="card-total">
               Total: <strong th:text="${totalInstalaciones}">0</strong>
             </div>
@@ -151,7 +151,7 @@
 
           <!-- AVERIAS -->
           <div class="dash-card">
-            <div class="card-label">Averías</div>
+            <div class="card-label">Averías <button type="button" class="help-icon" data-help="dashboard.averias" aria-label="Ayuda"></button></div>
             <div class="card-total">
               Total: <strong th:text="${totalAverias}">0</strong>
             </div>

@@ -25,7 +25,7 @@
       <div class="page-body">
 
         <div class="page-header">
-          <h1>Lista de instalaciones</h1>
+          <h1>Lista de instalaciones <button type="button" class="help-icon" data-help="instalaciones.titulo" aria-label="Ayuda"></button></h1>
 
           <div class="filter-row">
             <a th:href="@{/instalaciones}" class="btn"
@@ -44,17 +44,19 @@
               th:classappend="${estadoSeleccionado == 'Anulado'} ? ' btn-primary' : ' btn-outline'">
               Anulados
             </a>
+            <button type="button" class="help-icon" data-help="instalaciones.filtro" aria-label="Ayuda"></button>
           </div>
 
           <div style="display:flex; align-items:center; gap:16px;">
             <div class="search-bar">
-              <label>Buscar:</label>
+              <label>Buscar: <button type="button" class="help-icon" data-help="instalaciones.buscar" aria-label="Ayuda"></button></label>
               <input type="text" id="searchInput" placeholder="Pre-cliente, dirección..." />
             </div>
             <a sec:authorize="hasRole('ADMIN')" href="/instalaciones/nueva" class="btn btn-primary">
               <span class="ph ph-plus" style="font-size:18px;"></span>
               Nueva instalación
             </a>
+            <button sec:authorize="hasRole('ADMIN')" type="button" class="help-icon" data-help="instalaciones.nueva" aria-label="Ayuda"></button>
           </div>
         </div>
 
@@ -68,7 +70,7 @@
                 <th>Estado</th>
                 <th>Fecha registro</th>
                 <th>Fecha atención</th>
-                <th>Acciones</th>
+                <th>Acciones <button type="button" class="help-icon" data-help="instalaciones.acciones" aria-label="Ayuda"></button></th>
               </tr>
             </thead>
             <tbody id="tableBody">

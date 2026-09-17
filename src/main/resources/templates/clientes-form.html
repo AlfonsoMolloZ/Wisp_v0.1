@@ -37,7 +37,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
               <div class="form-group">
-                <label>Nombres</label>
+                <label>Nombres <button type="button" class="help-icon" data-help="cliente.identidad" aria-label="Ayuda"></button></label>
                 <input type="text" th:field="*{nombres}" placeholder="Ingrese nombres" required />
               </div>
 
@@ -67,7 +67,7 @@
               </div>
 
               <div class="form-group">
-                <label>Red WAN</label>
+                <label>Red WAN <button type="button" class="help-icon" data-help="cliente.redWan" aria-label="Ayuda"></button></label>
                 <select th:field="*{redWanId}" required>
                   <option value="">-- Seleccione una red --</option>
                   <option th:each="red : ${redes}" th:value="${red.id}" th:text="${red.nombre}"></option>
@@ -75,7 +75,7 @@
               </div>
 
               <div class="form-group">
-                <label>Plan</label>
+                <label>Plan <button type="button" class="help-icon" data-help="cliente.plan" aria-label="Ayuda"></button></label>
                 <select th:field="*{planId}">
                   <option th:each="plan : ${planes}" th:value="${plan.id}" th:text="${plan.nombre}"></option>
                 </select>
@@ -84,14 +84,14 @@
 
             <!-- Estado -->
             <div th:if="${cliente.estado == 'Suspendido'}" class="form-group" style="max-width: 480px;">
-              <label>Estado</label>
+              <label>Estado <button type="button" class="help-icon" data-help="cliente.estado" aria-label="Ayuda"></button></label>
               <select th:field="*{estado}">
                 <option value="Suspendido">Suspendido</option>
                 <option value="Activo">Activar</option>
               </select>
             </div>
             <div class="form-group" th:unless="${cliente.estado == 'Suspendido'}" style="max-width: 480px;">
-              <label>Estado</label>
+              <label>Estado <button type="button" class="help-icon" data-help="cliente.estado" aria-label="Ayuda"></button></label>
               <input type="text" th:value="${cliente.estado}" readonly style="opacity: 0.6; cursor: not-allowed;" />
             </div>
 
@@ -99,6 +99,7 @@
               <span class="ph ph-floppy-disk" style="font-size:18px;"></span>
               Guardar
             </button>
+            <button type="button" class="help-icon" data-help="cliente.guardar" aria-label="Ayuda"></button>
           </form>
 
           <div th:if="${error}" class="alert-error" style="margin-top:16px; max-width: 480px;">

@@ -45,12 +45,12 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
               <div class="form-group">
-                <label>Monto</label>
+                <label>Monto <button type="button" class="help-icon" data-help="pago.monto" aria-label="Ayuda"></button></label>
                 <input type="number" step="0.01" th:field="*{monto}" required />
               </div>
 
               <div class="form-group">
-                <label>Estado</label>
+                <label>Estado <button type="button" class="help-icon" data-help="pago.estado" aria-label="Ayuda"></button></label>
                 <select th:field="*{estado}">
                   <th:block th:if="${pago.estado != 'Pagado'}">
                     <option th:value="${pago.estado}" th:text="${pago.estado}"></option>
@@ -78,12 +78,12 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
               <div class="form-group">
-                <label>Fecha de pago</label>
+                <label>Fecha de pago <button type="button" class="help-icon" data-help="pago.fechaPago" aria-label="Ayuda"></button></label>
                 <input type="date" name="fechaPago" th:value="${pago.fechaPago != null ? #temporals.format(pago.fechaPago,'yyyy-MM-dd') : ''}" th:readonly="${pago.fechaPago != null}" />
               </div>
 
               <div class="form-group">
-                <label>Método de pago</label>
+                <label>Método de pago <button type="button" class="help-icon" data-help="pago.metodo" aria-label="Ayuda"></button></label>
                 <select th:field="*{metodoPago}">
                   <option value="">Seleccione</option>
                   <option value="Efectivo">Efectivo</option>
@@ -101,6 +101,7 @@
               <span class="ph ph-floppy-disk" style="font-size:18px;"></span>
               Guardar
             </button>
+            <button type="button" class="help-icon" data-help="pago.guardar" aria-label="Ayuda"></button>
           </form>
 
         </div>
