@@ -1,4 +1,4 @@
-# WispJR - Sistema de Gestion de Red ISP
+# Wisp - Sistema de Gestion de Red ISP
 
 Sistema web para la gestion integral de una empresa de servicios de internet inalambrico (WISP). Permite administrar clientes, instalaciones, pagos, redes WAN, inventario de stock, averias y usuarios con control de acceso por roles.
 

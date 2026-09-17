@@ -34,3 +34,10 @@ build/
 
 ### opencode ###
 .opencode/node_modules/
+
+### AI / agent skills (no versionar) ###
+.agents/
+.claude/
+.opencode/skills/
+agent/
+skills-lock.json

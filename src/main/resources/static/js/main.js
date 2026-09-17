@@ -1,5 +1,5 @@
 /* ============================================================
-   WispJR — main.js
+   Wisp — main.js
    Funcionalidades compartidas: sidebar, modales, toasts, búsqueda
    ============================================================ */
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     themeToggle.addEventListener('change', function () {
       var newTheme = themeToggle.checked ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('wispjr-theme', newTheme);
+      localStorage.setItem('wisp-theme', newTheme);
     });
   }
 

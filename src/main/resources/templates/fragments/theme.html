@@ -4,7 +4,7 @@
   <th:block th:fragment="theme-init">
     <script>
       (function() {
-        var t = localStorage.getItem('wispjr-theme')
+        var t = localStorage.getItem('wisp-theme')
           || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', t);
       })();
