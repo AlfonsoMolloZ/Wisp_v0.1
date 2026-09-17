@@ -1,5 +1,6 @@
 package com.wisp.app.servicios.impl;
 
+import com.wisp.app.NegocioException;
 import com.wisp.app.entity.Usuario;
 import com.wisp.app.repository.UsuarioRepository;
 import com.wisp.app.servicios.UsuarioService;
@@ -19,9 +20,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario guardarUsuario(Usuario usuario) {
-        if (usuario.getPassword() != null) {
+        String username = usuario.getUsername();
+        if (username == null || username.isBlank()) {
+            throw new NegocioException("El nombre de usuario es obligatorio.");
+        }
+
+        if (usuario.getRole() == null
+                || !(usuario.getRole().equals("ADMIN")
+                        || usuario.getRole().equals("Tecnico")
+                        || usuario.getRole().equals("USER"))) {
+            throw new NegocioException("El rol seleccionado no es válido.");
+        }
+
+        if (usuario.getId() == null) {
+            if (usuario.getPassword() == null || usuario.getPassword().length() < 4) {
+                throw new NegocioException("La contraseña debe tener al menos 4 caracteres.");
+            }
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        } else if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
+
+        usuarioRepository.findByUsername(username)
+                .filter(existente -> usuario.getId() == null || !existente.getId().equals(usuario.getId()))
+                .ifPresent(existente -> {
+                    throw new NegocioException("El nombre de usuario ya existe.");
+                });
+
         return usuarioRepository.save(usuario);
     }
 

@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.wisp.app.NegocioException;
 import com.wisp.app.entity.Cliente;
 import com.wisp.app.entity.Pagos;
 import com.wisp.app.repository.ClienteRepository;
@@ -26,8 +28,8 @@ public class PagosServiceImpl implements PagosService {
     }
 
     @Override
+    @Transactional
     public void generarPagosMensuales() {
-        System.out.println("ENTRANDO A GENERAR PAGOS EN SERVIOS");
 
         int mesActual = LocalDate.now().getMonthValue();
         int anioActual = LocalDate.now().getYear();
@@ -50,6 +52,10 @@ public class PagosServiceImpl implements PagosService {
             }
 
             Pagos pago = new Pagos();
+
+            if (cliente.getPlan() == null) {
+                continue;
+            }
 
             pago.setCliente(cliente);
             pago.setMonto(cliente.getPlan().getPrecio());
@@ -96,7 +102,7 @@ public class PagosServiceImpl implements PagosService {
             if (!"Pagado".equals(estadoNuevo)
                     && !"Anulado".equals(estadoNuevo)) {
 
-                throw new RuntimeException(
+                throw new NegocioException(
                         "Un pago realizado solo puede anularse.");
             }
 
@@ -105,7 +111,7 @@ public class PagosServiceImpl implements PagosService {
             if (!estadoAnterior.equals(estadoNuevo)
                     && !"Pagado".equals(estadoNuevo)) {
 
-                throw new RuntimeException(
+                throw new NegocioException(
                         "Solo puede cambiar el estado a Pagado.");
             }
 

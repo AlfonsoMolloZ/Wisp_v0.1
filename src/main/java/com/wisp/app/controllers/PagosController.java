@@ -78,9 +78,6 @@ public class PagosController {
     public String editar(@PathVariable Long id, Model model) {
 
         Pagos pago = pagosService.buscarPorId(id);
-        System.out.println("La fecha de emision traida es: " + pago.getFechaEmision());
-        System.out.println("La fecha de vencimiento traida es: " + pago.getFechaVencimiento());
-        System.out.println("La fecha de pago traida es: " + pago.getFechaPago());
         model.addAttribute("pago", pago);
 
         return "pagos-form";
@@ -88,12 +85,6 @@ public class PagosController {
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Pagos pago) {
-
-        // solo prueba
-        System.out.println("Fecha emisión: " + pago.getFechaEmision());
-        System.out.println("Fecha vencimiento: " + pago.getFechaVencimiento());
-        System.out.println("Fecha pago: " + pago.getFechaPago());
-        System.out.println("Estado: " + pago.getEstado());
 
         pagosService.guardar(pago);
 

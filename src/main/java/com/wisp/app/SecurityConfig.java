@@ -19,7 +19,7 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
 
                                                 // Recursos públicos
-                                                .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**").permitAll()
+                                                .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**", "/error").permitAll()
 
                                                 // Login y página de error
                                                 .requestMatchers("/login", "/acceso-denegado").permitAll()

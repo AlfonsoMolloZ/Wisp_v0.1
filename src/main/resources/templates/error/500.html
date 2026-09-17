@@ -17,6 +17,7 @@
                 <div class="error-code">500</div>
                 <h2>Error interno del servidor</h2>
                 <p>Algo salió mal. Por favor, intenta de nuevo o contacta al administrador.</p>
+                <p th:if="${errorMsg}" style="color: var(--danger); font-weight:600;">[[${errorMsg}]]</p>
                 <a th:href="@{/dashboard}" class="btn btn-primary">Ir al Dashboard</a>
             </div>
         </div>

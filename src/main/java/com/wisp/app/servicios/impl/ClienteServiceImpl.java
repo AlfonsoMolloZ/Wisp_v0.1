@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.wisp.app.NegocioException;
 import com.wisp.app.entity.Cliente;
 import com.wisp.app.entity.RedWan;
 import com.wisp.app.repository.ClienteRepository;
@@ -28,6 +29,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Cliente guardarCliente(Cliente cliente) {
+
+        if (cliente.getNombres() == null || cliente.getNombres().isBlank()
+                || cliente.getApellidos() == null || cliente.getApellidos().isBlank()
+                || cliente.getDni() == null || cliente.getDni().isBlank()) {
+            throw new NegocioException("Nombres, apellidos y DNI son obligatorios.");
+        }
 
         if (cliente.getId() == null) {
 
