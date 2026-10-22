@@ -62,10 +62,6 @@ public class ViewController {
                                 "clientesActivos",
                                 clienteService.buscarPorEstado("Activo").size());
 
-                model.addAttribute(
-                                "clientesDeudores",
-                                clienteService.buscarPorEstado("Suspendido").size());
-
                 // AVERÍAS
                 model.addAttribute(
                                 "totalAverias",
@@ -83,8 +79,9 @@ public class ViewController {
                 List<Pagos> pagos = pagosRepo.findAll();
 
                 double totalPagos = pagos.stream()
-                                .filter(p -> p != null)
-                                .mapToDouble(p -> p.getMonto())
+                                .filter(p -> "Pagado".equals(p.getEstado()))
+                                .filter(p -> p.getMonto() != null)
+                                .mapToDouble(Pagos::getMonto)
                                 .sum();
 
                 int pagosRecibidos = pagosRepo
