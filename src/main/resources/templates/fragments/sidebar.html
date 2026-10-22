@@ -15,6 +15,10 @@
         <span class="icon ph ph-network"></span>
         <span class="nav-label">Redes WAN</span>
       </a>
+      <a sec:authorize="hasRole('ADMIN')" href="/planes" class="nav-item" data-tooltip="Planes">
+        <span class="icon ph ph-stack"></span>
+        <span class="nav-label">Planes</span>
+      </a>
       <a sec:authorize="hasRole('ADMIN')" href="/clientes" class="nav-item" data-tooltip="Clientes">
         <span class="icon ph ph-users"></span>
         <span class="nav-label">Clientes</span>

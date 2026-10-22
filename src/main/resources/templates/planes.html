@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planes</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <th:block th:replace="~{fragments/favicon :: favicon}"></th:block>
+  <th:block th:replace="~{fragments/theme :: theme-init}"></th:block>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main">
+
+      <!-- Topbar -->
+      <div th:replace="~{fragments/topbar :: topbar}"></div>
+
+      <div class="page-body">
+
+        <div class="page-header">
+          <h1>Planes</h1>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="search-bar">
+              <label>Buscar:</label>
+              <input type="text" id="searchInput" placeholder="Nombre..." />
+            </div>
+            <a href="/planes/nuevo" class="btn btn-primary">
+              <span class="ph ph-plus" style="font-size:18px;"></span>
+              Nuevo plan
+            </a>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Velocidad</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr th:each="plan : ${planes}">
+                <td th:text="${plan.nombre}">Básico</td>
+                <td th:text="${plan.precio}">10.00</td>
+                <td th:text="${plan.velocidad} + ' Mbps'">10 Mbps</td>
+                <td class="actions">
+                  <a th:href="@{/planes/editar/{id}(id=${plan.id})}" class="btn-icon btn-edit" title="Editar">
+                    <span class="ph ph-pencil-simple"></span>
+                  </a>
+                  <form th:action="@{/planes/eliminar/{id}(id=${plan.id})}" method="post" style="display:inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="btn-icon btn-del" title="Eliminar"
+                      onclick="return confirm('¿Desea eliminar este plan?')">
+                      <span class="ph ph-trash"></span>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(planes)}">
+                <td colspan="4">
+                  <div class="empty-state">
+                    <span class="empty-icon ph ph-stack"></span>
+                    <h3>No hay planes</h3>
+                    <p>Registra tu primer plan</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    initTableSearch('searchInput', 'tableBody');
+  </script>
+
+</body>
+</html>
