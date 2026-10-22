@@ -41,3 +41,6 @@ build/
 .opencode/skills/
 agent/
 skills-lock.json
+
+# Configuración local: nunca subir credenciales
+application-local.properties
