@@ -97,7 +97,18 @@ Se redirigira automaticamente a la pagina de login.
 
 ### 6. Credenciales de acceso
 
-Los usuarios se crean desde el modulo **Usuarios** dentro del sistema (requiere rol ADMIN). Las contraseñas se almacenan encriptadas con BCrypt.
+En una base de datos vacia, el sistema crea el usuario administrador solo si defines estas variables de entorno antes de arrancar:
+
+| Variable | Descripcion | Ejemplo |
+|----------|-------------|---------|
+| `WISP_ADMIN_USERNAME` | Usuario administrador (opcional, por defecto `ADMIN`) | `ADMIN` |
+| `WISP_ADMIN_PASSWORD` | Contraseña inicial del administrador (obligatoria para crear el usuario) | `una-contraseña-segura` |
+
+```powershell
+$env:WISP_ADMIN_PASSWORD="una-contraseña-segura"
+```
+
+Si no defines `WISP_ADMIN_PASSWORD`, no se crea ningun usuario y el arranque solo registra un aviso. Los usuarios posteriores se crean desde el modulo **Usuarios** dentro del sistema (requiere rol ADMIN). Las contraseñas se almacenan encriptadas con BCrypt.
 
 ---
 
