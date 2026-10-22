@@ -11,6 +11,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     boolean existsByDni(String dni);
 
+    boolean existsByRedWanId(Long redWanId);
+
+    boolean existsByPlanId(Long planId);
+
     // Buscar clientes que pertenecen a una red WAN
     List<Cliente> findByRedWanId(Long id);
 

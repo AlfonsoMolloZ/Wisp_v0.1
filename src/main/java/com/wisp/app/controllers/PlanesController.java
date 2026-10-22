@@ -5,6 +5,7 @@ import com.wisp.app.servicios.PlanesService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/planes")
@@ -41,8 +42,12 @@ public class PlanesController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
-        planesService.eliminar(id);
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            planesService.eliminar(id);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/planes";
     }
 }

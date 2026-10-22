@@ -7,6 +7,7 @@ import com.wisp.app.servicios.RedWanService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/redes-wan")
@@ -65,9 +66,13 @@ public class RedWanController {
     }
 
     @PostMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
-        redWanService.eliminar(id);
+        try {
+            redWanService.eliminar(id);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
 
         return "redirect:/redes-wan";
     }
