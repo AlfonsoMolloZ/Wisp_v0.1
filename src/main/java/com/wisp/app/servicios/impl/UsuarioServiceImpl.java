@@ -21,6 +21,28 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario guardarUsuario(Usuario usuario) {
 
+        // Validar que el username sea único
+        String username = usuario.getUsername();
+
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre de usuario es obligatorio.");
+        }
+
+        if (usuarioRepository.existsByUsername(username)) {
+            Usuario existente = usuarioRepository
+                    .findByUsername(username)
+                    .orElse(null);
+
+            // Permitir conservar el username del mismo usuario al editar
+            if (existente != null
+                    && !java.util.Objects.equals(
+                            existente.getId(), usuario.getId())) {
+                throw new IllegalArgumentException(
+                        "El nombre de usuario ya está registrado.");
+            }
+        }
+
         // Edición: recuperar el usuario existente
         if (usuario.getId() != null) {
             Usuario existente = usuarioRepository
