@@ -1,10 +1,11 @@
 package com.wisp.app.servicios.impl;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.wisp.app.entity.Usuario;
 import com.wisp.app.repository.UsuarioRepository;
 import com.wisp.app.servicios.UsuarioService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -19,9 +20,37 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario guardarUsuario(Usuario usuario) {
-        if (usuario.getPassword() != null) {
-            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+
+        // Edición: recuperar el usuario existente
+        if (usuario.getId() != null) {
+            Usuario existente = usuarioRepository
+                    .findById(usuario.getId().longValue())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("Usuario no encontrado"));
+
+            existente.setUsername(usuario.getUsername());
+            existente.setRole(usuario.getRole());
+
+            // Solo cambiar la contraseña si se ingresó una nueva
+            if (usuario.getPassword() != null
+                    && !usuario.getPassword().isBlank()) {
+                existente.setPassword(
+                        passwordEncoder.encode(usuario.getPassword()));
+            }
+
+            return usuarioRepository.save(existente);
         }
+
+        // Creación: la contraseña es obligatoria
+        if (usuario.getPassword() == null
+                || usuario.getPassword().isBlank()) {
+            throw new IllegalArgumentException(
+                    "La contraseña es obligatoria al crear un usuario");
+        }
+
+        usuario.setPassword(
+                passwordEncoder.encode(usuario.getPassword()));
+
         return usuarioRepository.save(usuario);
     }
 
