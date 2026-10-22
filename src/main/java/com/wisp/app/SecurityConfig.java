@@ -24,8 +24,14 @@ public class SecurityConfig {
                                                 // Login y página de error
                                                 .requestMatchers("/login", "/acceso-denegado").permitAll()
 
-                                                // Dashboard solo ADMIN
-                                                .requestMatchers("/dashboard").hasRole("ADMIN")
+                                                // Inicio y dashboard: solo ADMIN
+                                                .requestMatchers("/", "/dashboard").hasRole("ADMIN")
+
+                                                // Módulos exclusivos ADMIN
+                                                .requestMatchers(
+                                                        "/redes-wan", "/redes-wan/**",
+                                                        "/planes", "/planes/**"
+                                                ).hasRole("ADMIN")
 
                                                 // Solo visualizar instalaciones
                                                 .requestMatchers("/instalaciones", "/instalaciones/ver/**", "/averias",
