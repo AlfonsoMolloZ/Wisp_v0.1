@@ -47,18 +47,29 @@ Abrir MySQL y ejecutar:
 CREATE DATABASE wisp;
 ```
 
-### 3. Configurar credenciales (opcional)
+### 3. Configurar conexión a la base de datos
 
-Las credenciales por defecto estan en `src/main/resources/application.properties`:
+La aplicación obtiene las credenciales de MySQL mediante variables de entorno. No se deben guardar contraseñas en el repositorio.
 
-```properties
-server.port=8090
-spring.datasource.url=jdbc:mysql://localhost:3306/wisp
-spring.datasource.username=root
-spring.datasource.password=0202
+Configura las siguientes variables antes de iniciar la aplicación:
+
+| Variable | Descripción | Ejemplo |
+|---|---|---|
+| `DB_URL` | URL JDBC de MySQL | `jdbc:mysql://localhost:3306/wisp` |
+| `DB_USERNAME` | Usuario de MySQL | `root` |
+| `DB_PASSWORD` | Contraseña de MySQL | La contraseña configurada localmente |
+
+En Windows PowerShell, puedes definirlas para la sesión actual:
+
+```powershell
+$env:DB_URL="jdbc:mysql://localhost:3306/wisp"
+$env:DB_USERNAME="root"
+$env:DB_PASSWORD="TU_CONTRASEÑA_LOCAL"
 ```
 
-Si tu MySQL usa otras credenciales, modificar los campos `username` y `password`.
+Reemplaza `TU_CONTRASEÑA_LOCAL` por tu contraseña real. No la compartas ni la escribas en archivos versionados.
+
+Después, inicia la aplicación desde esa misma terminal. Las variables deben estar configuradas también en el entorno donde se ejecute el proyecto.
 
 ### 4. Ejecutar la aplicacion
 
