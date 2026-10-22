@@ -3,6 +3,8 @@ package com.wisp.app.servicios.impl;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.wisp.app.entity.Cliente;
@@ -13,6 +15,8 @@ import com.wisp.app.servicios.PagosService;
 
 @Service
 public class PagosServiceImpl implements PagosService {
+
+    private static final Logger log = LoggerFactory.getLogger(PagosServiceImpl.class);
 
     private final ClienteRepository clienteRepository;
     private final PagosRepository pagosRepository;
@@ -27,16 +31,20 @@ public class PagosServiceImpl implements PagosService {
 
     @Override
     public void generarPagosMensuales() {
-        System.out.println("ENTRANDO A GENERAR PAGOS EN SERVIOS");
-
-        int mesActual = LocalDate.now().getMonthValue();
-        int anioActual = LocalDate.now().getYear();
+        LocalDate hoy = LocalDate.now();
+        int mesActual = hoy.getMonthValue();
+        int anioActual = hoy.getYear();
 
         List<Cliente> clientes = clienteRepository.findAll();
 
         for (Cliente cliente : clientes) {
 
             if (!"Activo".equals(cliente.getEstado())) {
+                continue;
+            }
+
+            if (cliente.getPlan() == null || cliente.getPlan().getPrecio() == null) {
+                log.warn("Cliente {} sin plan o precio: no se genero el pago mensual.", cliente.getId());
                 continue;
             }
 
@@ -57,8 +65,8 @@ public class PagosServiceImpl implements PagosService {
             pago.setMes(mesActual);
             pago.setAnio(anioActual);
 
-            pago.setFechaEmision(LocalDate.now());
-            pago.setFechaVencimiento(LocalDate.now().plusDays(30));
+            pago.setFechaEmision(hoy);
+            pago.setFechaVencimiento(hoy.withDayOfMonth(1).plusMonths(1));
 
             pago.setEstado("Pendiente");
 
@@ -83,8 +91,12 @@ public class PagosServiceImpl implements PagosService {
 
     @Override
     public Pagos guardar(Pagos pago) {
+        if (pago.getId() == null) {
+            throw new IllegalArgumentException("El pago no existe.");
+        }
+
         Pagos original = pagosRepository.findById(pago.getId())
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Pago no encontrado."));
 
         String estadoAnterior = original.getEstado();
         String estadoNuevo = pago.getEstado();
@@ -132,6 +144,7 @@ public class PagosServiceImpl implements PagosService {
         for (Pagos pago : pagos) {
 
             if ("Pendiente".equals(pago.getEstado())
+                    && pago.getFechaVencimiento() != null
                     && LocalDate.now().isAfter(pago.getFechaVencimiento())) {
 
                 pago.setEstado("Vencido");
