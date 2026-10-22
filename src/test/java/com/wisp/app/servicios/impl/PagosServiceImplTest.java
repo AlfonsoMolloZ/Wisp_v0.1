@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -16,6 +17,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -69,38 +72,81 @@ class PagosServiceImplTest {
     }
 
     @Test
-    void permitePasarDePendienteAPagado() {
-        Pagos original = pago(1L, "Pendiente");
-        Pagos cambio = pago(1L, "Pagado");
-        when(pagosRepository.findById(1L)).thenReturn(Optional.of(original));
-        when(pagosRepository.save(original)).thenReturn(original);
+    void omiteClientesNoActivos() {
+        when(clienteRepository.findAll()).thenReturn(List.of(cliente(3L, "Suspendido", 50.0)));
 
-        Pagos guardado = service.guardar(cambio);
+        service.generarPagosMensuales();
 
-        assertThat(guardado.getEstado()).isEqualTo("Pagado");
+        verify(pagosRepository, never()).save(any(Pagos.class));
     }
 
     @Test
-    void permiteAnularUnPagoPagado() {
-        Pagos original = pago(1L, "Pagado");
-        Pagos cambio = pago(1L, "Anulado");
-        when(pagosRepository.findById(1L)).thenReturn(Optional.of(original));
-        when(pagosRepository.save(original)).thenReturn(original);
+    void omitePagoSiYaExisteElDelMes() {
+        when(clienteRepository.findAll()).thenReturn(List.of(cliente(4L, "Activo", 50.0)));
+        when(pagosRepository.existsByClienteIdAndMesAndAnio(eq(4L), anyInt(), anyInt())).thenReturn(true);
 
-        Pagos guardado = service.guardar(cambio);
+        service.generarPagosMensuales();
 
-        assertThat(guardado.getEstado()).isEqualTo("Anulado");
+        verify(pagosRepository, never()).save(any(Pagos.class));
     }
 
     @Test
-    void rechazaCambiarUnPagoPagadoAVencido() {
-        Pagos original = pago(1L, "Pagado");
-        Pagos cambio = pago(1L, "Vencido");
+    void omiteClienteConPrecioNulo() {
+        Cliente cliente = cliente(5L, "Activo", 50.0);
+        cliente.getPlan().setPrecio(null);
+        when(clienteRepository.findAll()).thenReturn(List.of(cliente));
+
+        service.generarPagosMensuales();
+
+        verify(pagosRepository, never()).save(any(Pagos.class));
+    }
+
+    @Test
+    void rechazaGuardarPagoSinId() {
+        Pagos pago = pago(null, "Pendiente");
+
+        assertThatThrownBy(() -> service.guardar(pago))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("El pago no existe.");
+
+        verifyNoInteractions(pagosRepository);
+    }
+
+    @Test
+    void rechazaGuardarPagoInexistente() {
+        Pagos pago = pago(99L, "Pendiente");
+        when(pagosRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.guardar(pago))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Pago no encontrado.");
+    }
+
+    @ParameterizedTest(name = "{0} -> {1} permitido={2}")
+    @CsvSource({
+            "Pendiente, Pagado, true",
+            "Pendiente, Pendiente, true",
+            "Pendiente, Anulado, false",
+            "Pendiente, Vencido, false",
+            "Pagado, Pagado, true",
+            "Pagado, Anulado, true",
+            "Pagado, Vencido, false",
+            "Vencido, Pagado, true",
+            "Vencido, Vencido, true",
+            "Vencido, Anulado, false"
+    })
+    void validaTransicionesDeEstado(String estadoAnterior, String estadoNuevo, boolean permitido) {
+        Pagos original = pago(1L, estadoAnterior);
+        Pagos cambio = pago(1L, estadoNuevo);
         when(pagosRepository.findById(1L)).thenReturn(Optional.of(original));
 
-        assertThatThrownBy(() -> service.guardar(cambio))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("anularse");
+        if (permitido) {
+            when(pagosRepository.save(original)).thenReturn(original);
+            assertThat(service.guardar(cambio).getEstado()).isEqualTo(estadoNuevo);
+        } else {
+            assertThatThrownBy(() -> service.guardar(cambio))
+                    .isInstanceOf(RuntimeException.class);
+        }
     }
 
     @Test
@@ -115,6 +161,18 @@ class PagosServiceImplTest {
         assertThat(vencido.getEstado()).isEqualTo("Vencido");
         assertThat(sinFecha.getEstado()).isEqualTo("Pendiente");
         verify(pagosRepository).save(vencido);
+    }
+
+    @Test
+    void ignoraPagosPagadosAlActualizarVencidos() {
+        Pagos pagado = pago(3L, "Pagado");
+        pagado.setFechaVencimiento(LocalDate.now().minusDays(1));
+        when(pagosRepository.findAll()).thenReturn(List.of(pagado));
+
+        service.actualizarPagosVencidos();
+
+        assertThat(pagado.getEstado()).isEqualTo("Pagado");
+        verify(pagosRepository, never()).save(any(Pagos.class));
     }
 
     private Cliente cliente(Long id, String estado, Double precio) {
