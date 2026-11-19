@@ -18,6 +18,9 @@ Sistema web para la gestion integral de una empresa de servicios de internet ina
 | Iconos | Phosphor Icons | 2.1.2 |
 | Fuentes | Rajdhani + DM Sans (Google Fonts) |
 | Build | Maven | - |
+| Contenedores | Docker + Docker Compose | - |
+| CI/CD | GitHub Actions + Docker Hub | - |
+| Cloud | Render + Aiven MySQL | - |
 
 ---
 
@@ -109,6 +112,61 @@ $env:WISP_ADMIN_PASSWORD="una-contraseña-segura"
 ```
 
 Si no defines `WISP_ADMIN_PASSWORD`, no se crea ningun usuario y el arranque solo registra un aviso. Los usuarios posteriores se crean desde el modulo **Usuarios** dentro del sistema (requiere rol ADMIN). Las contraseñas se almacenan encriptadas con BCrypt.
+
+---
+
+## Ejecución con Docker
+
+### Prerrequisitos
+
+- Docker Desktop
+
+### Pasos
+
+1. Copiar la plantilla de variables de entorno:
+
+```bash
+cp .env.example .env
+```
+
+2. Editar `.env` con las credenciales locales.
+
+3. Construir y levantar los servicios:
+
+```bash
+docker compose up -d --build
+```
+
+4. Abrir `http://localhost:8090`.
+
+Comandos útiles:
+
+```bash
+docker compose ps              # estado de app y db
+docker compose logs -f app     # logs de la aplicacion
+docker compose down            # detiene (conserva datos)
+docker compose down -v         # reinicia la base y vuelve a ejecutar el seeder
+```
+
+Servicios: `app` (Spring Boot, puerto 8090) y `db` (MySQL 8.4, puerto local 3307).
+Los datos persisten en el volumen `db-data`. El perfil `prod` se activa en el
+contenedor y los datos de prueba se cargan con `WISP_SEED_DEMO=true`.
+
+---
+
+## Despliegue en la nube
+
+- Imagen publicada: `alfonso02mz/wisp-app` (Docker Hub, tags `latest` y `sha-*`).
+- Publicación automatica: GitHub Actions en cada merge a `main`
+  (`.github/workflows/ci-cd.yml`: tests + build/push).
+- Despliegue: Render Web Service con la imagen y MySQL gestionado en Aiven.
+- URL: https://wisp-app-latest.onrender.com
+- Variables requeridas en el servicio cloud: `DB_URL`, `DB_USERNAME`,
+  `DB_PASSWORD`, `WISP_ADMIN_USERNAME`, `WISP_ADMIN_PASSWORD`, `WISP_SEED_DEMO`,
+  `SPRING_PROFILES_ACTIVE=prod` y `JAVA_TOOL_OPTIONS`.
+- El workflow invoca el Deploy Hook de Render (secret `RENDER_DEPLOY_HOOK_URL`).
+
+Documentacion detallada del avance: [`docs/apf3/README.md`](docs/apf3/README.md).
 
 ---
 
