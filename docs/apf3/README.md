@@ -159,7 +159,7 @@ dashboard con metricas y modulos con datos de prueba.
 
 - El plan gratuito de Render suspende la instancia por inactividad; el primer acceso
   puede tardar hasta un minuto.
-- La base MySQL gratuita de Aiven tiene 1 GB y requiere SSL (`ssl-mode=REQUIRED`).
+- La base MySQL gratuita de Aiven tiene 1 GB, requiere SSL (`ssl-mode=REQUIRED`) y el plan free limita las conexiones concurrentes.
 - Las credenciales compartidas durante el desarrollo deben rotarse: token de Docker Hub
   (secret `DOCKERHUB_TOKEN`) y contrasena de Aiven (`DB_PASSWORD` en Render).
 - Si la tabla `usuarios` ya tiene registros, `DataInitializer` no cambia la contrasena
