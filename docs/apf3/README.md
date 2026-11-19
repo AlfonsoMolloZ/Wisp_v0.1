@@ -151,15 +151,16 @@ dashboard con metricas y modulos con datos de prueba.
 - Commits por fase y Pull Requests #13, #14, #15, #16 y #22 mergeados a `main`.
 - El PR #16 se cerro accidentalmente y se reabrio antes del merge (historial visible).
 - Incidencias registradas en GitHub Issues #17 a #21 y cerradas como completadas.
-- No se produjeron conflictos reales de merge durante el avance; el flujo usado es
-  merge local de `main` en la rama, resolucion manual y push.
+- Conflicto real resuelto en la seccion de limitaciones entre `docs/apf3-conflicto-a`
+  (PR #23) y `docs/apf3-conflicto-b` (PR #24): merge local de `main`, resolucion manual
+  conservando ambas notas y push. El merge queda en el historial de git.
 - CI en cada PR y push a `main`; CD publica la imagen y dispara el deploy de Render.
 
 ## 11. Limitaciones y recomendaciones
 
 - El plan gratuito de Render suspende la instancia por inactividad; el primer acceso
   puede tardar hasta un minuto.
-- La base MySQL gratuita de Aiven tiene 1 GB, requiere SSL (`ssl-mode=REQUIRED`) y se recomienda un respaldo antes de la demo.
+- La base MySQL gratuita de Aiven tiene 1 GB, requiere SSL (`ssl-mode=REQUIRED`), el plan free limita las conexiones concurrentes y se recomienda un respaldo antes de la demo.
 - Las credenciales compartidas durante el desarrollo deben rotarse: token de Docker Hub
   (secret `DOCKERHUB_TOKEN`) y contrasena de Aiven (`DB_PASSWORD` en Render).
 - Si la tabla `usuarios` ya tiene registros, `DataInitializer` no cambia la contrasena
